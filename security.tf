@@ -56,11 +56,11 @@ resource "pagerduty_service_dependency" "security" {
 }
 
 resource "pagerduty_slack_connection" "security" {
-  channel_id        = var.core_outputs.slack_service_delivery_team_channel
+  channel_id        = var.slack_security_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.security.id
   source_type       = "service_reference"
-  workspace_id      = var.core_outputs.slack_workspace_id
+  workspace_id      = var.slack_workspace_id
 
   config {
     events = [
