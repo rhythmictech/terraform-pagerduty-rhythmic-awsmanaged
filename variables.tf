@@ -8,7 +8,23 @@ variable "customer_name" {
   type        = string
 }
 
-variable "core_outputs" {
-  description = "Core Outputs"
-  type        = map(any)
+variable "slack_compliance_team_channel" {
+  description = "The Slack channel ID for the compliance team"
+  type        = string
+}
+
+
+variable "slack_security_team_channel" {
+  description = "The Slack channel ID for the security team"
+  type        = string
+}
+
+variable "slack_service_delivery_team_channel" {
+  description = "The Slack channel ID for the service delivery team"
+  type        = string
+}
+
+variable "slack_workspace_id" {
+  description = "The Slack workspace ID"
+  type        = string
 }

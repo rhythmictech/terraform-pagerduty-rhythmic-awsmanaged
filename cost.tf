@@ -56,11 +56,11 @@ resource "pagerduty_service_dependency" "cost" {
 }
 
 resource "pagerduty_slack_connection" "cost" {
-  channel_id        = var.core_outputs.slack_service_delivery_team_channel
+  channel_id        = var.slack_service_delivery_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.cost.id
   source_type       = "service_reference"
-  workspace_id      = var.core_outputs.slack_workspace_id
+  workspace_id      = var.slack_workspace_id
 
   config {
     events = [
