@@ -3,7 +3,7 @@ data "pagerduty_escalation_policy" "cost" {
 }
 
 data "pagerduty_escalation_policy" "cost_quarantine" {
-  name = "ZZ-Cost Quarantine Notifications Policy"
+  name = "ZZ-Service Delivery Quarantine Notifications Policy"
 }
 
 locals {
