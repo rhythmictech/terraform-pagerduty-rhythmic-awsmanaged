@@ -3,7 +3,7 @@ data "pagerduty_escalation_policy" "security" {
 }
 
 data "pagerduty_escalation_policy" "security_quarantine" {
-  name = "ZZ-Security Quarantine Policy"
+  name = "ZZ-Security Quarantine Notifications Policy"
 }
 
 locals {

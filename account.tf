@@ -3,7 +3,7 @@ data "pagerduty_escalation_policy" "account" {
 }
 
 data "pagerduty_escalation_policy" "account_quarantine" {
-  name = "ZZ-Account Quarantine Policy"
+  name = "ZZ-Account Quarantine Notifications Policy"
 }
 
 locals {

@@ -3,7 +3,7 @@ data "pagerduty_escalation_policy" "compliance" {
 }
 
 data "pagerduty_escalation_policy" "compliance_quarantine" {
-  name = "ZZ-Compliance Quarantine Policy"
+  name = "ZZ-Compliance Quarantine Notifications Policy"
 }
 
 locals {
