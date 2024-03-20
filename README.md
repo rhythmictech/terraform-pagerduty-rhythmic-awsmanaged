@@ -6,7 +6,7 @@
 [![pre-commit-check](https://github.com/rhythmictech/terraform-pagerduty-rhythmic-awsmanaged/workflows/pre-commit-check/badge.svg?branch=master&event=push)](https://github.com/rhythmictech/terraform-pagerduty-rhythmic-customer/actions?query=workflow%3Apre-commit-check+event%3Apush+branch%3Amaster)
 <a href="https://twitter.com/intent/follow?screen_name=RhythmicTech"><img src="https://img.shields.io/twitter/follow/RhythmicTech?style=social&logo=twitter" alt="follow on Twitter"></a>
 
-Configures PagerDuty for a customer
+Configures PagerDuty for a customer with AWS Managed Services
 
 ## Requirements
 * PagerDuty provider
@@ -17,7 +17,7 @@ Configures PagerDuty for a customer
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_pagerduty"></a> [pagerduty](#requirement\_pagerduty) | ~> 3.9 |
+| <a name="requirement_pagerduty"></a> [pagerduty](#requirement\_pagerduty) | ~> 3.10 |
 
 ## Providers
 
@@ -57,9 +57,13 @@ No modules.
 | [pagerduty_slack_connection.security](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/slack_connection) | resource |
 | [pagerduty_business_service.customer](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/business_service) | data source |
 | [pagerduty_escalation_policy.account](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/escalation_policy) | data source |
+| [pagerduty_escalation_policy.account_quarantine](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/escalation_policy) | data source |
 | [pagerduty_escalation_policy.compliance](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/escalation_policy) | data source |
+| [pagerduty_escalation_policy.compliance_quarantine](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/escalation_policy) | data source |
 | [pagerduty_escalation_policy.cost](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/escalation_policy) | data source |
+| [pagerduty_escalation_policy.cost_quarantine](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/escalation_policy) | data source |
 | [pagerduty_escalation_policy.security](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/escalation_policy) | data source |
+| [pagerduty_escalation_policy.security_quarantine](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/escalation_policy) | data source |
 | [pagerduty_extension_schema.jira](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/extension_schema) | data source |
 | [pagerduty_team.service_delivery](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/team) | data source |
 | [pagerduty_vendor.datadog](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/data-sources/vendor) | data source |
@@ -70,8 +74,12 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_awsorg_name"></a> [awsorg\_name](#input\_awsorg\_name) | AWS Organization Name (can be nickname or formal name) | `string` | n/a | yes |
 | <a name="input_customer_name"></a> [customer\_name](#input\_customer\_name) | Customer Name | `string` | n/a | yes |
+| <a name="input_enable_quarantine"></a> [enable\_quarantine](#input\_enable\_quarantine) | Override to quarantine alerts | `bool` | `false` | no |
+| <a name="input_slack_compliance_quarantine_channel"></a> [slack\_compliance\_quarantine\_channel](#input\_slack\_compliance\_quarantine\_channel) | The Slack channel ID for the compliance team quarantined alerts | `string` | n/a | yes |
 | <a name="input_slack_compliance_team_channel"></a> [slack\_compliance\_team\_channel](#input\_slack\_compliance\_team\_channel) | The Slack channel ID for the compliance team | `string` | n/a | yes |
+| <a name="input_slack_security_quarantine_channel"></a> [slack\_security\_quarantine\_channel](#input\_slack\_security\_quarantine\_channel) | The Slack channel ID for the security team quarantined alerts | `string` | n/a | yes |
 | <a name="input_slack_security_team_channel"></a> [slack\_security\_team\_channel](#input\_slack\_security\_team\_channel) | The Slack channel ID for the security team | `string` | n/a | yes |
+| <a name="input_slack_service_delivery_quarantine_channel"></a> [slack\_service\_delivery\_quarantine\_channel](#input\_slack\_service\_delivery\_quarantine\_channel) | The Slack channel ID for the service delivery team quarantined alerts | `string` | n/a | yes |
 | <a name="input_slack_service_delivery_team_channel"></a> [slack\_service\_delivery\_team\_channel](#input\_slack\_service\_delivery\_team\_channel) | The Slack channel ID for the service delivery team | `string` | n/a | yes |
 | <a name="input_slack_workspace_id"></a> [slack\_workspace\_id](#input\_slack\_workspace\_id) | The Slack workspace ID | `string` | n/a | yes |
 

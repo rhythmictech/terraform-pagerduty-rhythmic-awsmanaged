@@ -2,43 +2,25 @@ data "pagerduty_escalation_policy" "account" {
   name = "Account Notifications Policy"
 }
 
+data "pagerduty_escalation_policy" "account_quarantine" {
+  name = "ZZ-Service Delivery Quarantine Notifications Policy"
+}
+
+locals {
+  account_escalation_policy           = var.enable_quarantine ? data.pagerduty_escalation_policy.account_quarantine.id : data.pagerduty_escalation_policy.account.id
+  slack_service_delivery_team_channel = var.enable_quarantine ? var.slack_service_delivery_quarantine_channel : var.slack_service_delivery_team_channel
+}
+
 resource "pagerduty_service" "account" {
   name                    = "${var.awsorg_name} Account Notifications (AWS - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = 0
-  escalation_policy       = data.pagerduty_escalation_policy.account.id
+  escalation_policy       = local.account_escalation_policy
 
   incident_urgency_rule {
-    type = "use_support_hours"
-
-    during_support_hours {
-      type    = "constant"
-      urgency = "high"
-    }
-
-    outside_support_hours {
-      type    = "constant"
-      urgency = "low"
-    }
-  }
-
-  support_hours {
-    type         = "fixed_time_per_day"
-    time_zone    = "America/New_York"
-    start_time   = "07:00:00"
-    end_time     = "20:00:00"
-    days_of_week = [1, 2, 3, 4, 5]
-  }
-
-  scheduled_actions {
-    type       = "urgency_change"
-    to_urgency = "high"
-
-    at {
-      type = "named_time"
-      name = "support_hours_start"
-    }
+    type    = "constant"
+    urgency = "low"
   }
 }
 
@@ -56,7 +38,7 @@ resource "pagerduty_service_dependency" "account" {
 }
 
 resource "pagerduty_slack_connection" "account" {
-  channel_id        = var.slack_service_delivery_team_channel
+  channel_id        = local.slack_service_delivery_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.account.id
   source_type       = "service_reference"
