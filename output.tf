@@ -1,16 +1,23 @@
-output "account_service_id" {
-  description = "PagerDuty service for cost notifications"
-  value       = pagerduty_service.cost.id
-}
+
 
 output "account_datadog_integration_key" {
   description = "PagerDuty Datadog Integration for account notifications"
   value       = pagerduty_service_integration.account.integration_key
 }
 
-output "compliance_service_id" {
-  description = "PagerDuty service for compliance notifications"
-  value       = pagerduty_service.compliance.id
+output "account_datadog_mention" {
+  description = "PagerDuty Service Mention with proper formatting"
+  value       = "@pagerduty-${replace(pagerduty_service.account.name, "/[\\[\\]\\(\\){} ]/g", "")}"
+}
+
+output "account_service_id" {
+  description = "PagerDuty service ID for account notifications"
+  value       = pagerduty_service.account.id
+}
+
+output "account_service_name" {
+  description = "PagerDuty service name for account notifications"
+  value       = pagerduty_service.account.name
 }
 
 output "compliance_datadog_integration_key" {
@@ -18,9 +25,19 @@ output "compliance_datadog_integration_key" {
   value       = pagerduty_service_integration.compliance.integration_key
 }
 
-output "cost_service_id" {
-  description = "PagerDuty service for cost notifications"
-  value       = pagerduty_service.cost.id
+output "compliance_datadog_mention" {
+  description = "PagerDuty Service Mention with proper formatting"
+  value       = "@pagerduty-${replace(pagerduty_service.compliance.name, "/[\\[\\]\\(\\){} ]/g", "")}"
+}
+
+output "compliance_service_id" {
+  description = "PagerDuty service ID for compliance notifications"
+  value       = pagerduty_service.compliance.id
+}
+
+output "compliance_service_name" {
+  description = "PagerDuty service name for compliance notifications"
+  value       = pagerduty_service.compliance.name
 }
 
 output "cost_datadog_integration_key" {
@@ -28,14 +45,39 @@ output "cost_datadog_integration_key" {
   value       = pagerduty_service_integration.cost.integration_key
 }
 
-output "security_service_id" {
-  description = "PagerDuty service for security notifications"
-  value       = pagerduty_service.security.id
+output "cost_datadog_mention" {
+  description = "PagerDuty Service Mention with proper formatting"
+  value       = "@pagerduty-${replace(pagerduty_service.cost.name, "/[\\[\\]\\(\\){} ]/g", "")}"
+}
+
+output "cost_service_id" {
+  description = "PagerDuty service ID for cost notifications"
+  value       = pagerduty_service.cost.id
+}
+
+output "cost_service_name" {
+  description = "PagerDuty service name for cost notifications"
+  value       = pagerduty_service.cost.name
 }
 
 output "security_datadog_integration_key" {
   description = "PagerDuty Datadog Integration for security notifications"
   value       = pagerduty_service_integration.security.integration_key
+}
+
+output "security_datadog_mention" {
+  description = "PagerDuty Service Mention with proper formatting"
+  value       = "@pagerduty-${replace(pagerduty_service.security.name, "/[\\[\\]\\(\\){} ]/g", "")}"
+}
+
+output "security_service_id" {
+  description = "PagerDuty service ID for security notifications"
+  value       = pagerduty_service.security.id
+}
+
+output "security_service_name" {
+  description = "PagerDuty service name for security notifications"
+  value       = pagerduty_service.security.name
 }
 
 output "datadog_integrations" {
