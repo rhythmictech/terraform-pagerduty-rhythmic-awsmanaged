@@ -7,7 +7,7 @@ output "account_datadog_integration_key" {
 
 output "account_datadog_mention" {
   description = "PagerDuty Service Mention with proper formatting"
-  value       = "@pagerduty-${replace(pagerduty_service.account.name, "/[\\[\\]\\(\\){} ]/g", "")}"
+  value       = "@pagerduty-${replace(pagerduty_service.account.name, "/[\\[\\]\\(\\) ]/", "")}"
 }
 
 output "account_service_id" {
@@ -27,7 +27,7 @@ output "compliance_datadog_integration_key" {
 
 output "compliance_datadog_mention" {
   description = "PagerDuty Service Mention with proper formatting"
-  value       = "@pagerduty-${replace(pagerduty_service.compliance.name, "/[\\[\\]\\(\\){} ]/g", "")}"
+  value       = "@pagerduty-${replace(pagerduty_service.compliance.name, "/[\\[\\]\\(\\) ]/", "")}"
 }
 
 output "compliance_service_id" {
@@ -47,7 +47,7 @@ output "cost_datadog_integration_key" {
 
 output "cost_datadog_mention" {
   description = "PagerDuty Service Mention with proper formatting"
-  value       = "@pagerduty-${replace(pagerduty_service.cost.name, "/[\\[\\]\\(\\){} ]/g", "")}"
+  value       = "@pagerduty-${replace(pagerduty_service.cost.name, "/[\\[\\]\\(\\) ]/", "")}"
 }
 
 output "cost_service_id" {
@@ -67,7 +67,7 @@ output "security_datadog_integration_key" {
 
 output "security_datadog_mention" {
   description = "PagerDuty Service Mention with proper formatting"
-  value       = "@pagerduty-${replace(pagerduty_service.security.name, "/[\\[\\]\\(\\){} ]/g", "")}"
+  value       = "@pagerduty-${replace(pagerduty_service.security.name, "/[\\[\\]\\(\\) ]/", "")}"
 }
 
 output "security_service_id" {
