@@ -15,7 +15,7 @@ data "pagerduty_team" "service_delivery" {
 }
 
 resource "pagerduty_business_service" "aws" {
-  name        = "${var.awsorg_name} - AWS Managed Services [${var.customer_name}]"
+  name        = "${var.awsorg_name} - AWS Managed Services (${var.customer_name})"
   description = "AWS Managed Services - account health, compliance, cost and security monitoring"
   team        = data.pagerduty_team.service_delivery.id
 }
