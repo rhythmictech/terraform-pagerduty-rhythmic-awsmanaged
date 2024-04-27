@@ -2,13 +2,8 @@ data "pagerduty_escalation_policy" "account" {
   name = "Account Notifications Policy"
 }
 
-data "pagerduty_escalation_policy" "account_quarantine" {
-  name = "ZZ-Service Delivery Quarantine Notifications Policy"
-}
-
 locals {
-  account_escalation_policy           = var.enable_quarantine ? data.pagerduty_escalation_policy.account_quarantine.id : data.pagerduty_escalation_policy.account.id
-  slack_service_delivery_team_channel = var.enable_quarantine ? var.slack_service_delivery_quarantine_channel : var.slack_service_delivery_team_channel
+  slack_customer_success_team_channel = var.enable_quarantine ? var.slack_customer_success_quarantine_channel : var.slack_customer_success_team_channel
 }
 
 resource "pagerduty_service" "account" {
@@ -16,7 +11,7 @@ resource "pagerduty_service" "account" {
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = 0
-  escalation_policy       = local.account_escalation_policy
+  escalation_policy       = data.pagerduty_escalation_policy.account.id
 
   incident_urgency_rule {
     type    = "constant"
@@ -38,7 +33,7 @@ resource "pagerduty_service_dependency" "account" {
 }
 
 resource "pagerduty_slack_connection" "account" {
-  channel_id        = local.slack_service_delivery_team_channel
+  channel_id        = local.slack_customer_success_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.account.id
   source_type       = "service_reference"
@@ -74,4 +69,81 @@ resource "pagerduty_extension" "account" {
   config            = templatefile("${path.module}/jira.json", {})
   extension_objects = [pagerduty_service.account.id]
   extension_schema  = data.pagerduty_extension_schema.jira.id
+}
+
+resource "pagerduty_event_orchestration_service" "account" {
+  count = var.enable_quarantine ? 1 : 0
+
+  service                                = pagerduty_service.account.id
+  enable_event_orchestration_for_service = true
+
+  set {
+    id = "start"
+
+    rule {
+      label = "Route quarantine events to Slack"
+      actions {
+        variable {
+          name  = "details"
+          path  = "event.custom_details"
+          value = "(.*)"
+          type  = "regex"
+        }
+
+        variable {
+          name  = "summary"
+          path  = "event.summary"
+          value = "(.*)"
+          type  = "regex"
+        }
+
+        automation_action {
+          name      = "AWS Chatbot Webhook"
+          url       = data.aws_ssm_parameter.chatbot_publisher_invoke_url.value
+          auto_send = true
+
+          parameter {
+            key   = "channel"
+            value = "success_quarantine"
+          }
+
+          parameter {
+            key   = "message"
+            value = "{{variables.summary}}"
+          }
+
+          parameter {
+            key   = "details"
+            value = "{{variables.details}}"
+          }
+
+          header {
+            key   = "Content-Type"
+            value = "application/json"
+          }
+
+          header {
+            key   = "x-api-key"
+            value = data.aws_ssm_parameter.chatbot_publisher_api_key.value
+          }
+        }
+
+        route_to = "suppress"
+      }
+    }
+  }
+  set {
+    id = "suppress"
+
+    rule {
+      label = "Suppress event"
+      actions {
+        suppress = true
+      }
+    }
+  }
+
+  catch_all {
+    actions {}
+  }
 }

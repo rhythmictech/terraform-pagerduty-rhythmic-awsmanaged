@@ -2,20 +2,12 @@ data "pagerduty_escalation_policy" "cost" {
   name = "Cost Notifications Policy"
 }
 
-data "pagerduty_escalation_policy" "cost_quarantine" {
-  name = "ZZ-Service Delivery Quarantine Notifications Policy"
-}
-
-locals {
-  cost_escalation_policy = var.enable_quarantine ? data.pagerduty_escalation_policy.cost_quarantine.id : data.pagerduty_escalation_policy.cost.id
-}
-
 resource "pagerduty_service" "cost" {
   name                    = "${var.awsorg_name} Cost Notifications (AWS - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = 0
-  escalation_policy       = local.cost_escalation_policy
+  escalation_policy       = data.pagerduty_escalation_policy.cost.id
 
   incident_urgency_rule {
     type    = "constant"
@@ -37,7 +29,7 @@ resource "pagerduty_service_dependency" "cost" {
 }
 
 resource "pagerduty_slack_connection" "cost" {
-  channel_id        = local.slack_service_delivery_team_channel
+  channel_id        = local.slack_customer_success_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.cost.id
   source_type       = "service_reference"
@@ -73,4 +65,81 @@ resource "pagerduty_extension" "cost" {
   config            = templatefile("${path.module}/jira.json", {})
   extension_objects = [pagerduty_service.cost.id]
   extension_schema  = data.pagerduty_extension_schema.jira.id
+}
+
+resource "pagerduty_event_orchestration_service" "cost" {
+  count = var.enable_quarantine ? 1 : 0
+
+  service                                = pagerduty_service.cost.id
+  enable_event_orchestration_for_service = true
+
+  set {
+    id = "start"
+
+    rule {
+      label = "Route quarantine events to Slack"
+      actions {
+        variable {
+          name  = "details"
+          path  = "event.custom_details"
+          value = "(.*)"
+          type  = "regex"
+        }
+
+        variable {
+          name  = "summary"
+          path  = "event.summary"
+          value = "(.*)"
+          type  = "regex"
+        }
+
+        automation_action {
+          name      = "AWS Chatbot Webhook"
+          url       = data.aws_ssm_parameter.chatbot_publisher_invoke_url.value
+          auto_send = true
+
+          parameter {
+            key   = "channel"
+            value = "success_quarantine"
+          }
+
+          parameter {
+            key   = "message"
+            value = "{{variables.summary}}"
+          }
+
+          parameter {
+            key   = "details"
+            value = "{{variables.details}}"
+          }
+
+          header {
+            key   = "Content-Type"
+            value = "application/json"
+          }
+
+          header {
+            key   = "x-api-key"
+            value = data.aws_ssm_parameter.chatbot_publisher_api_key.value
+          }
+        }
+
+        route_to = "suppress"
+      }
+    }
+  }
+  set {
+    id = "suppress"
+
+    rule {
+      label = "Suppress event"
+      actions {
+        suppress = true
+      }
+    }
+  }
+
+  catch_all {
+    actions {}
+  }
 }
