@@ -2,12 +2,7 @@ data "pagerduty_escalation_policy" "compliance" {
   name = "Compliance Notifications Policy"
 }
 
-data "pagerduty_escalation_policy" "compliance_quarantine" {
-  name = "ZZ-Compliance Quarantine Notifications Policy"
-}
-
 locals {
-  compliance_escalation_policy  = var.enable_quarantine ? data.pagerduty_escalation_policy.compliance_quarantine.id : data.pagerduty_escalation_policy.compliance.id
   slack_compliance_team_channel = var.enable_quarantine ? var.slack_compliance_quarantine_channel : var.slack_compliance_team_channel
 }
 
@@ -16,7 +11,7 @@ resource "pagerduty_service" "compliance" {
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = 0
-  escalation_policy       = local.compliance_escalation_policy
+  escalation_policy       = data.pagerduty_escalation_policy.compliance.id
 
   incident_urgency_rule {
     type    = "constant"
@@ -74,4 +69,81 @@ resource "pagerduty_extension" "compliance" {
   config            = templatefile("${path.module}/jira.json", {})
   extension_objects = [pagerduty_service.compliance.id]
   extension_schema  = data.pagerduty_extension_schema.jira.id
+}
+
+resource "pagerduty_event_orchestration_service" "compliance" {
+  count = var.enable_quarantine ? 1 : 0
+
+  service                                = pagerduty_service.compliance.id
+  enable_event_orchestration_for_service = true
+
+  set {
+    id = "start"
+
+    rule {
+      label = "Route quarantine events to Slack"
+      actions {
+        variable {
+          name  = "details"
+          path  = "event.custom_details"
+          value = "(.*)"
+          type  = "regex"
+        }
+
+        variable {
+          name  = "summary"
+          path  = "event.summary"
+          value = "(.*)"
+          type  = "regex"
+        }
+
+        automation_action {
+          name      = "AWS Chatbot Webhook"
+          url       = data.aws_ssm_parameter.chatbot_publisher_invoke_url.value
+          auto_send = true
+
+          parameter {
+            key   = "channel"
+            value = "compliance_quarantine"
+          }
+
+          parameter {
+            key   = "message"
+            value = "{{variables.summary}}"
+          }
+
+          parameter {
+            key   = "details"
+            value = "{{variables.details}}"
+          }
+
+          header {
+            key   = "Content-Type"
+            value = "application/json"
+          }
+
+          header {
+            key   = "x-api-key"
+            value = data.aws_ssm_parameter.chatbot_publisher_api_key.value
+          }
+        }
+
+        route_to = "suppress"
+      }
+    }
+  }
+  set {
+    id = "suppress"
+
+    rule {
+      label = "Suppress event"
+      actions {
+        suppress = true
+      }
+    }
+  }
+
+  catch_all {
+    actions {}
+  }
 }

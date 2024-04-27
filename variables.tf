@@ -28,12 +28,12 @@ variable "slack_security_quarantine_channel" {
   type        = string
 }
 
-variable "slack_service_delivery_team_channel" {
+variable "slack_customer_success_team_channel" {
   description = "The Slack channel ID for the service delivery team"
   type        = string
 }
 
-variable "slack_service_delivery_quarantine_channel" {
+variable "slack_customer_success_quarantine_channel" {
   description = "The Slack channel ID for the service delivery team quarantined alerts"
   type        = string
 }

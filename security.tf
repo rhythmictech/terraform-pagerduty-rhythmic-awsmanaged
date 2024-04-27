@@ -2,12 +2,7 @@ data "pagerduty_escalation_policy" "security" {
   name = "Security Notifications Policy"
 }
 
-data "pagerduty_escalation_policy" "security_quarantine" {
-  name = "ZZ-Security Quarantine Notifications Policy"
-}
-
 locals {
-  security_escalation_policy  = var.enable_quarantine ? data.pagerduty_escalation_policy.security_quarantine.id : data.pagerduty_escalation_policy.security.id
   slack_security_team_channel = var.enable_quarantine ? var.slack_security_quarantine_channel : var.slack_security_team_channel
 }
 
@@ -16,7 +11,7 @@ resource "pagerduty_service" "security" {
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = 0
-  escalation_policy       = local.security_escalation_policy
+  escalation_policy       = data.pagerduty_escalation_policy.security.id
 
   incident_urgency_rule {
     type = "use_support_hours"
@@ -101,4 +96,81 @@ resource "pagerduty_extension" "security" {
   config            = templatefile("${path.module}/jira.json", {})
   extension_objects = [pagerduty_service.security.id]
   extension_schema  = data.pagerduty_extension_schema.jira.id
+}
+
+resource "pagerduty_event_orchestration_service" "security" {
+  count = var.enable_quarantine ? 1 : 0
+
+  service                                = pagerduty_service.account.id
+  enable_event_orchestration_for_service = true
+
+  set {
+    id = "start"
+
+    rule {
+      label = "Route quarantine events to Slack"
+      actions {
+        variable {
+          name  = "details"
+          path  = "event.custom_details"
+          value = "(.*)"
+          type  = "regex"
+        }
+
+        variable {
+          name  = "summary"
+          path  = "event.summary"
+          value = "(.*)"
+          type  = "regex"
+        }
+
+        automation_action {
+          name      = "AWS Chatbot Webhook"
+          url       = data.aws_ssm_parameter.chatbot_publisher_invoke_url.value
+          auto_send = true
+
+          parameter {
+            key   = "channel"
+            value = "security_quarantine"
+          }
+
+          parameter {
+            key   = "message"
+            value = "{{variables.summary}}"
+          }
+
+          parameter {
+            key   = "details"
+            value = "{{variables.details}}"
+          }
+
+          header {
+            key   = "Content-Type"
+            value = "application/json"
+          }
+
+          header {
+            key   = "x-api-key"
+            value = data.aws_ssm_parameter.chatbot_publisher_api_key.value
+          }
+        }
+
+        route_to = "suppress"
+      }
+    }
+  }
+  set {
+    id = "suppress"
+
+    rule {
+      label = "Suppress event"
+      actions {
+        suppress = true
+      }
+    }
+  }
+
+  catch_all {
+    actions {}
+  }
 }
