@@ -101,7 +101,7 @@ resource "pagerduty_extension" "security" {
 resource "pagerduty_event_orchestration_service" "security" {
   count = var.enable_quarantine ? 1 : 0
 
-  service                                = pagerduty_service.account.id
+  service                                = pagerduty_service.security.id
   enable_event_orchestration_for_service = true
 
   set {
