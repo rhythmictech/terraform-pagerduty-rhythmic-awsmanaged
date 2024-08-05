@@ -2,21 +2,12 @@ data "pagerduty_escalation_policy" "compliance" {
   name = "Compliance Notifications Policy"
 }
 
-data "pagerduty_escalation_policy" "compliance_quarantine" {
-  name = "ZZ-Compliance Quarantine Notifications Policy"
-}
-
-locals {
-  compliance_escalation_policy  = var.enable_quarantine ? data.pagerduty_escalation_policy.compliance_quarantine.id : data.pagerduty_escalation_policy.compliance.id
-  slack_compliance_team_channel = var.enable_quarantine ? var.slack_compliance_quarantine_channel : var.slack_compliance_team_channel
-}
-
 resource "pagerduty_service" "compliance" {
   name                    = "${var.awsorg_name} Compliance Notifications (AWS - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = 0
-  escalation_policy       = local.compliance_escalation_policy
+  escalation_policy       = data.pagerduty_escalation_policy.compliance.id
 
   incident_urgency_rule {
     type    = "constant"
@@ -38,7 +29,7 @@ resource "pagerduty_service_dependency" "compliance" {
 }
 
 resource "pagerduty_slack_connection" "compliance" {
-  channel_id        = local.slack_compliance_team_channel
+  channel_id        = var.slack_compliance_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.compliance.id
   source_type       = "service_reference"
