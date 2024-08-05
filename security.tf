@@ -2,21 +2,12 @@ data "pagerduty_escalation_policy" "security" {
   name = "Security Notifications Policy"
 }
 
-data "pagerduty_escalation_policy" "security_quarantine" {
-  name = "ZZ-Security Quarantine Notifications Policy"
-}
-
-locals {
-  security_escalation_policy  = var.enable_quarantine ? data.pagerduty_escalation_policy.security_quarantine.id : data.pagerduty_escalation_policy.security.id
-  slack_security_team_channel = var.enable_quarantine ? var.slack_security_quarantine_channel : var.slack_security_team_channel
-}
-
 resource "pagerduty_service" "security" {
   name                    = "${var.awsorg_name} Security Notifications (AWS - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = 0
-  escalation_policy       = local.security_escalation_policy
+  escalation_policy       = data.pagerduty_escalation_policy.security.id
 
   incident_urgency_rule {
     type = "use_support_hours"
@@ -65,7 +56,7 @@ resource "pagerduty_service_dependency" "security" {
 }
 
 resource "pagerduty_slack_connection" "security" {
-  channel_id        = local.slack_security_team_channel
+  channel_id        = var.slack_security_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.security.id
   source_type       = "service_reference"
