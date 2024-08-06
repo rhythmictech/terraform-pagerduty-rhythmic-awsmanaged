@@ -7,7 +7,7 @@ resource "pagerduty_event_orchestration_service" "account" {
     rule {
       label = "Suppress VPN Alerts"
       condition {
-        expression = "raw_event.details.log_sample contains 'Connectivity on the second tunnel was not affected during this time'"
+        expression = "raw_event.details.log_sample matches part 'Connectivity on the second tunnel was not affected during this time'"
       }
       actions {
         suppress = true
