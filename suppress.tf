@@ -1,8 +1,8 @@
 locals {
-  account_suppression_rules    = concat(var.account_suppression_rules, var.account_default_suppression_rules)
-  compliance_suppression_rules = concat(var.compliance_suppression_rules, var.compliance_default_suppression_rules)
-  cost_suppression_rules       = concat(var.cost_suppression_rules, var.cost_default_suppression_rules)
-  security_suppression_rules   = concat(var.security_suppression_rules, var.security_default_suppression_rules)
+  account_suppression_rules    = concat(var.account_default_suppression_rules, var.account_suppression_rules)
+  compliance_suppression_rules = concat(var.compliance_default_suppression_rules, var.compliance_suppression_rules)
+  cost_suppression_rules       = concat(var.cost_default_suppression_rules, var.cost_suppression_rules)
+  security_suppression_rules   = concat(var.security_default_suppression_rules, var.security_suppression_rules)
 }
 
 resource "pagerduty_event_orchestration_service" "account_rules" {
