@@ -124,7 +124,7 @@ resource "pagerduty_event_orchestration_service" "security_rules" {
   service                                = pagerduty_service.security.id
   enable_event_orchestration_for_service = true
   set {
-    id = "suppression-rules"
+    id = "start"
     dynamic "rule" {
       for_each = local.security_suppression_rules
       content {
