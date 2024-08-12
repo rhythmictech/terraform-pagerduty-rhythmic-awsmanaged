@@ -6,7 +6,7 @@ resource "pagerduty_service" "account" {
   name                    = "${var.awsorg_name} Account Notifications (AWS - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
-  auto_resolve_timeout    = 0
+  auto_resolve_timeout    = "null"
   escalation_policy       = data.pagerduty_escalation_policy.account.id
 
   incident_urgency_rule {
@@ -19,7 +19,7 @@ resource "pagerduty_service_dependency" "account" {
   dependency {
     dependent_service {
       id   = pagerduty_business_service.aws.id
-      type = pagerduty_business_service.aws.type
+      type = "business_service"
     }
     supporting_service {
       id   = pagerduty_service.account.id
@@ -62,7 +62,7 @@ resource "pagerduty_service_integration" "account" {
 
 resource "pagerduty_extension" "account" {
   name              = "jira-${pagerduty_service.account.id}"
-  config            = templatefile("${path.module}/jira.json", {})
+  config            = templatefile("${path.module}/jira.json.tpl", { organization_id = var.jira_organization_id })
   extension_objects = [pagerduty_service.account.id]
   extension_schema  = data.pagerduty_extension_schema.jira.id
 }

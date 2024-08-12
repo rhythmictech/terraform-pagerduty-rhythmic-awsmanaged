@@ -6,7 +6,7 @@ resource "pagerduty_service" "cost" {
   name                    = "${var.awsorg_name} Cost Notifications (AWS - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
-  auto_resolve_timeout    = 0
+  auto_resolve_timeout    = "null"
   escalation_policy       = data.pagerduty_escalation_policy.cost.id
 
   incident_urgency_rule {
@@ -19,7 +19,7 @@ resource "pagerduty_service_dependency" "cost" {
   dependency {
     dependent_service {
       id   = pagerduty_business_service.aws.id
-      type = pagerduty_business_service.aws.type
+      type = "business_service"
     }
     supporting_service {
       id   = pagerduty_service.cost.id
@@ -62,7 +62,7 @@ resource "pagerduty_service_integration" "cost" {
 
 resource "pagerduty_extension" "cost" {
   name              = "jira-${pagerduty_service.cost.id}"
-  config            = templatefile("${path.module}/jira.json", {})
+  config            = templatefile("${path.module}/jira.json.tpl", { organization_id = var.jira_organization_id })
   extension_objects = [pagerduty_service.cost.id]
   extension_schema  = data.pagerduty_extension_schema.jira.id
 }

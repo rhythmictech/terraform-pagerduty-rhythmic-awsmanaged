@@ -11,6 +11,12 @@ variable "customer_name" {
   type        = string
 }
 
+variable "jira_organization_id" {
+  default     = ""
+  description = "The organization ID for Jira integration"
+  type        = string
+}
+
 variable "slack_compliance_team_channel" {
   description = "The Slack channel ID for the compliance team"
   type        = string
