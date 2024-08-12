@@ -6,7 +6,9 @@
 [![pre-commit-check](https://github.com/rhythmictech/terraform-pagerduty-rhythmic-awsmanaged/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/rhythmictech/terraform-pagerduty-rhythmic-awsmanaged/actions/workflows/pre-commit.yaml)
 <a href="https://twitter.com/intent/follow?screen_name=RhythmicTech"><img src="https://img.shields.io/twitter/follow/RhythmicTech?style=social&logo=twitter" alt="follow on Twitter"></a>
 
-Configures PagerDuty for a customer with AWS Managed Services
+Configures PagerDuty for a customer with AWS Managed Services.
+
+Suppression rules allow for PagerDuty Event Orchestration to automatically silence specified patterns, including optionally for a specified time range.
 
 ## Requirements
 * PagerDuty provider
@@ -34,7 +36,10 @@ No modules.
 | Name | Type |
 |------|------|
 | [pagerduty_business_service.aws](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/business_service) | resource |
-| [pagerduty_event_orchestration_service.account](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/event_orchestration_service) | resource |
+| [pagerduty_event_orchestration_service.account_rules](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/event_orchestration_service) | resource |
+| [pagerduty_event_orchestration_service.compliance_rules](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/event_orchestration_service) | resource |
+| [pagerduty_event_orchestration_service.cost_rules](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/event_orchestration_service) | resource |
+| [pagerduty_event_orchestration_service.security_rules](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/event_orchestration_service) | resource |
 | [pagerduty_extension.account](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/extension) | resource |
 | [pagerduty_extension.compliance](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/extension) | resource |
 | [pagerduty_extension.cost](https://registry.terraform.io/providers/PagerDuty/pagerduty/latest/docs/resources/extension) | resource |
@@ -69,8 +74,20 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_account_default_suppression_rules"></a> [account\_default\_suppression\_rules](#input\_account\_default\_suppression\_rules) | Default event suppression rules (override to an empty list to disable) | <pre>list(object({<br>    label     = string<br>    condition = string<br>  }))</pre> | <pre>[<br>  {<br>    "condition": "event.custom_details.log_sample matches part 'Connectivity on the second tunnel was not affected during this time'",<br>    "label": "VPN Connectivity"<br>  }<br>]</pre> | no |
+| <a name="input_account_suppression_rules"></a> [account\_suppression\_rules](#input\_account\_suppression\_rules) | Event suppression rules (uses PagerDuty event orchestration, merged with `account_default_suppression_rules`) | <pre>list(object({<br>    label     = string<br>    condition = string<br>  }))</pre> | `[]` | no |
+| <a name="input_account_timebound_suppression_rules"></a> [account\_timebound\_suppression\_rules](#input\_account\_timebound\_suppression\_rules) | Timebound event suppression rules (uses PagerDuty event orchestration) | <pre>list(object({<br>    label      = string<br>    condition  = string<br>    start_time = string<br>    end_time   = string<br>  }))</pre> | `[]` | no |
 | <a name="input_awsorg_name"></a> [awsorg\_name](#input\_awsorg\_name) | AWS Organization Name (can be nickname or formal name) | `string` | n/a | yes |
+| <a name="input_compliance_default_suppression_rules"></a> [compliance\_default\_suppression\_rules](#input\_compliance\_default\_suppression\_rules) | Default event suppression rules (override to an empty list to disable) | <pre>list(object({<br>    label     = string<br>    condition = string<br>  }))</pre> | `[]` | no |
+| <a name="input_compliance_suppression_rules"></a> [compliance\_suppression\_rules](#input\_compliance\_suppression\_rules) | Event suppression rules (uses PagerDuty event orchestration, merged with `compliance_default_suppression_rules`) | <pre>list(object({<br>    label     = string<br>    condition = string<br>  }))</pre> | `[]` | no |
+| <a name="input_compliance_timebound_suppression_rules"></a> [compliance\_timebound\_suppression\_rules](#input\_compliance\_timebound\_suppression\_rules) | Timebound event suppression rules (uses PagerDuty event orchestration) | <pre>list(object({<br>    label      = string<br>    condition  = string<br>    start_time = string<br>    end_time   = string<br>  }))</pre> | `[]` | no |
+| <a name="input_cost_default_suppression_rules"></a> [cost\_default\_suppression\_rules](#input\_cost\_default\_suppression\_rules) | Default event suppression rules (override to an empty list to disable) | <pre>list(object({<br>    label     = string<br>    condition = string<br>  }))</pre> | `[]` | no |
+| <a name="input_cost_suppression_rules"></a> [cost\_suppression\_rules](#input\_cost\_suppression\_rules) | Event suppression rules (uses PagerDuty event orchestration, merged with `cost_default_suppression_rules`) | <pre>list(object({<br>    label     = string<br>    condition = string<br>  }))</pre> | `[]` | no |
+| <a name="input_cost_timebound_suppression_rules"></a> [cost\_timebound\_suppression\_rules](#input\_cost\_timebound\_suppression\_rules) | Timebound event suppression rules (uses PagerDuty event orchestration) | <pre>list(object({<br>    label      = string<br>    condition  = string<br>    start_time = string # Format "2024-03-00 00:00:00 Etc/UTC"<br>    end_time   = string # Format "2024-03-00 00:00:00 Etc/UTC"<br>  }))</pre> | `[]` | no |
 | <a name="input_customer_name"></a> [customer\_name](#input\_customer\_name) | Customer Name | `string` | n/a | yes |
+| <a name="input_security_default_suppression_rules"></a> [security\_default\_suppression\_rules](#input\_security\_default\_suppression\_rules) | Default event suppression rules (override to an empty list to disable) | <pre>list(object({<br>    label     = string<br>    condition = string<br>  }))</pre> | `[]` | no |
+| <a name="input_security_suppression_rules"></a> [security\_suppression\_rules](#input\_security\_suppression\_rules) | Event suppression rules (uses PagerDuty event orchestration, merged with `security_default_suppression_rules`) | <pre>list(object({<br>    label     = string<br>    condition = string<br>  }))</pre> | `[]` | no |
+| <a name="input_security_timebound_suppression_rules"></a> [security\_timebound\_suppression\_rules](#input\_security\_timebound\_suppression\_rules) | Timebound event suppression rules (uses PagerDuty event orchestration) | <pre>list(object({<br>    label      = string<br>    condition  = string<br>    start_time = string # Format "2024-03-00 00:00:00 Etc/UTC"<br>    end_time   = string # Format "2024-03-00 00:00:00 Etc/UTC"<br>  }))</pre> | `[]` | no |
 | <a name="input_slack_compliance_team_channel"></a> [slack\_compliance\_team\_channel](#input\_slack\_compliance\_team\_channel) | The Slack channel ID for the compliance team | `string` | n/a | yes |
 | <a name="input_slack_customer_success_team_channel"></a> [slack\_customer\_success\_team\_channel](#input\_slack\_customer\_success\_team\_channel) | The Slack channel ID for the customer success team | `string` | n/a | yes |
 | <a name="input_slack_security_team_channel"></a> [slack\_security\_team\_channel](#input\_slack\_security\_team\_channel) | The Slack channel ID for the security team | `string` | n/a | yes |
