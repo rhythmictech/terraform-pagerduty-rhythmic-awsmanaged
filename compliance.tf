@@ -6,7 +6,7 @@ resource "pagerduty_service" "compliance" {
   name                    = "${var.awsorg_name} Compliance Notifications (AWS - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
-  auto_resolve_timeout    = null
+  auto_resolve_timeout    = "null"
   escalation_policy       = data.pagerduty_escalation_policy.compliance.id
 
   incident_urgency_rule {
