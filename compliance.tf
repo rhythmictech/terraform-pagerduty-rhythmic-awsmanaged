@@ -19,7 +19,7 @@ resource "pagerduty_service_dependency" "compliance" {
   dependency {
     dependent_service {
       id   = pagerduty_business_service.aws.id
-      type = pagerduty_business_service.aws.type
+      type = "business_service"
     }
     supporting_service {
       id   = pagerduty_service.compliance.id
