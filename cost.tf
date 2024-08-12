@@ -62,7 +62,7 @@ resource "pagerduty_service_integration" "cost" {
 
 resource "pagerduty_extension" "cost" {
   name              = "jira-${pagerduty_service.cost.id}"
-  config            = templatefile("${path.module}/jira.json", {})
+  config            = templatefile("${path.module}/jira.json.tpl", { organization_id = var.jira_organization_id })
   extension_objects = [pagerduty_service.cost.id]
   extension_schema  = data.pagerduty_extension_schema.jira.id
 }
