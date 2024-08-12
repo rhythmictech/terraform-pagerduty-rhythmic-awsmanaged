@@ -6,7 +6,9 @@
 [![pre-commit-check](https://github.com/rhythmictech/terraform-pagerduty-rhythmic-awsmanaged/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/rhythmictech/terraform-pagerduty-rhythmic-awsmanaged/actions/workflows/pre-commit.yaml)
 <a href="https://twitter.com/intent/follow?screen_name=RhythmicTech"><img src="https://img.shields.io/twitter/follow/RhythmicTech?style=social&logo=twitter" alt="follow on Twitter"></a>
 
-Configures PagerDuty for a customer with AWS Managed Services
+Configures PagerDuty for a customer with AWS Managed Services.
+
+Suppression rules allow for PagerDuty Event Orchestration to automatically silence specified patterns, including optionally for a specified time range.
 
 ## Requirements
 * PagerDuty provider
