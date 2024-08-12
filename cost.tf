@@ -6,7 +6,7 @@ resource "pagerduty_service" "cost" {
   name                    = "${var.awsorg_name} Cost Notifications (AWS - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
-  auto_resolve_timeout    = 0
+  auto_resolve_timeout    = null
   escalation_policy       = data.pagerduty_escalation_policy.cost.id
 
   incident_urgency_rule {
