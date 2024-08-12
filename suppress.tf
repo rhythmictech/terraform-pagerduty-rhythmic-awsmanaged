@@ -10,7 +10,7 @@ resource "pagerduty_event_orchestration_service" "account_rules" {
   service                                = pagerduty_service.account.id
   enable_event_orchestration_for_service = true
   set {
-    id = "suppression-rules"
+    id = "start"
     dynamic "rule" {
       for_each = local.account_suppression_rules
       content {
@@ -48,7 +48,7 @@ resource "pagerduty_event_orchestration_service" "compliance_rules" {
   service                                = pagerduty_service.compliance.id
   enable_event_orchestration_for_service = true
   set {
-    id = "suppression-rules"
+    id = "start"
     dynamic "rule" {
       for_each = local.compliance_suppression_rules
       content {
@@ -86,7 +86,7 @@ resource "pagerduty_event_orchestration_service" "cost_rules" {
   service                                = pagerduty_service.cost.id
   enable_event_orchestration_for_service = true
   set {
-    id = "suppression-rules"
+    id = "start"
     dynamic "rule" {
       for_each = local.cost_suppression_rules
       content {
