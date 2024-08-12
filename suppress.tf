@@ -99,10 +99,7 @@ resource "pagerduty_event_orchestration_service" "cost_rules" {
         }
       }
     }
-  }
 
-  set {
-    id = "suppression-timebound-rules"
     dynamic "rule" {
       for_each = var.cost_timebound_suppression_rules
       content {
@@ -123,6 +120,7 @@ resource "pagerduty_event_orchestration_service" "cost_rules" {
 }
 
 resource "pagerduty_event_orchestration_service" "security_rules" {
+  count                                  = length(local.security_suppression_rules) > 0 || length(var.security_timebound_suppression_rules) > 0 ? 1 : 0
   service                                = pagerduty_service.security.id
   enable_event_orchestration_for_service = true
   set {
@@ -139,10 +137,7 @@ resource "pagerduty_event_orchestration_service" "security_rules" {
         }
       }
     }
-  }
 
-  set {
-    id = "suppression-timebound-rules"
     dynamic "rule" {
       for_each = var.security_timebound_suppression_rules
       content {
