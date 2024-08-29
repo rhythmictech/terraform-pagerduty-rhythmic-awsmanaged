@@ -52,9 +52,18 @@ variable "account_suppression_rules" {
 variable "account_default_suppression_rules" {
   default = [
     {
-      label     = "VPN Connectivity"
+      label     = "ACM certificate renewal successful"
+      condition = "event.custom_details.body matches part 'This is to notify you that AWS Certificate Manager (ACM) has completed the renewal of an SSL/TLS certificate'"
+    },
+    {
+      label     = "CloudShell home directory inactivity"
+      condition = "event.custom_details.body matches part 'AWS_CLOUDSHELL_PERSISTENCE_EXPIRING'"
+    },
+    {
+      label     = "VPN Connectivity (no redundancy lost)"
       condition = "event.custom_details.log_sample matches part 'Connectivity on the second tunnel was not affected during this time' or event.custom_details.body matches part 'Connectivity on the second tunnel was not affected during this time'"
-    }
+    },
+
   ]
   description = "Default event suppression rules (override to an empty list to disable)"
   type = list(object({
