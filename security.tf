@@ -56,6 +56,8 @@ resource "pagerduty_service_dependency" "security" {
 }
 
 resource "pagerduty_slack_connection" "security" {
+  count = var.slack_security_team_channel != null ? 1 : 0
+
   channel_id        = var.slack_security_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.security.id
