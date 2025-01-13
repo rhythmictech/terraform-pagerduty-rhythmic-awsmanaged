@@ -11,12 +11,6 @@ variable "customer_name" {
   type        = string
 }
 
-variable "jira_organization_id" {
-  default     = ""
-  description = "The organization ID for Jira integration"
-  type        = string
-}
-
 variable "slack_compliance_team_channel" {
   description = "The Slack channel ID for the compliance team"
   type        = string
@@ -35,6 +29,32 @@ variable "slack_customer_success_team_channel" {
 variable "slack_workspace_id" {
   description = "The Slack workspace ID"
   type        = string
+}
+
+########################################
+# Jira Integration
+########################################
+variable "jira_project_key" {
+  default     = "NOC"
+  description = "The Jira project key"
+  type        = string
+}
+
+variable "jira_project_name" {
+  default     = "NOC"
+  description = "The Jira project name"
+  type        = string
+}
+
+variable "jira_organization_id" {
+  type        = string
+  description = "Organization ID for Jira integration"
+}
+
+variable "jira_create_issue_on_incident_trigger" {
+  default     = false
+  type        = bool
+  description = "Whether to create a Jira issue when an incident is triggered"
 }
 
 ########################################

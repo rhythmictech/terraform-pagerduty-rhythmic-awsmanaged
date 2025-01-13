@@ -62,7 +62,15 @@ resource "pagerduty_service_integration" "compliance" {
 
 resource "pagerduty_extension" "compliance" {
   name              = "jira-${pagerduty_service.compliance.id}"
-  config            = templatefile("${path.module}/jira.json.tpl", { organization_id = var.jira_organization_id })
   extension_objects = [pagerduty_service.compliance.id]
   extension_schema  = data.pagerduty_extension_schema.jira.id
+
+  config = templatefile("${path.module}/jira.json.tpl",
+    {
+      project_key                      = var.jira_project_key
+      project_name                     = var.jira_project_name
+      organization_id                  = var.jira_organization_id
+      create_issue_on_incident_trigger = var.jira_create_issue_on_incident_trigger
+    }
+  )
 }

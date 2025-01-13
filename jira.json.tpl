@@ -16,7 +16,7 @@
       "untranslatedName": "In Progress"
     },
     "autocreateJQL": null,
-    "createIssueOnIncidentTrigger": false,
+    "createIssueOnIncidentTrigger": ${create_issue_on_incident_trigger},
     "customFields": [
       {
         "jira": {
@@ -283,7 +283,7 @@
     },
     "priorities": null,
     "project": {
-      "name": "NOC",
+      "name": "${project_key}",
       "avatarUrls": {
         "16x16": "https://rhythmic.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10554?size=xsmall",
         "24x24": "https://rhythmic.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10554?size=small",
@@ -293,7 +293,7 @@
       "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
       "id": "10012",
       "isPrivate": false,
-      "key": "NOC",
+      "key": "${project_key}",
       "projectCategory": {
         "name": "Service Desks",
         "description": "",
