@@ -29,6 +29,8 @@ resource "pagerduty_service_dependency" "cost" {
 }
 
 resource "pagerduty_slack_connection" "cost" {
+  count = var.slack_customer_success_team_channel != null ? 1 : 0
+
   channel_id        = var.slack_customer_success_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.cost.id

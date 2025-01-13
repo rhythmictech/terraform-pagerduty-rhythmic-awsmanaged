@@ -29,6 +29,8 @@ resource "pagerduty_service_dependency" "compliance" {
 }
 
 resource "pagerduty_slack_connection" "compliance" {
+  count = var.slack_compliance_team_channel != null ? 1 : 0
+
   channel_id        = var.slack_compliance_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.compliance.id

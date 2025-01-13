@@ -12,21 +12,25 @@ variable "customer_name" {
 }
 
 variable "slack_compliance_team_channel" {
+  default     = null
   description = "The Slack channel ID for the compliance team"
   type        = string
 }
 
 variable "slack_security_team_channel" {
+  default     = null
   description = "The Slack channel ID for the security team"
   type        = string
 }
 
 variable "slack_customer_success_team_channel" {
+  default     = null
   description = "The Slack channel ID for the customer success team"
   type        = string
 }
 
 variable "slack_workspace_id" {
+  default     = null
   description = "The Slack workspace ID"
   type        = string
 }
