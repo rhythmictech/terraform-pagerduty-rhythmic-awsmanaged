@@ -11,30 +11,60 @@ variable "customer_name" {
   type        = string
 }
 
-variable "jira_organization_id" {
-  default     = ""
-  description = "The organization ID for Jira integration"
-  type        = string
-}
-
 variable "slack_compliance_team_channel" {
+  default     = null
   description = "The Slack channel ID for the compliance team"
   type        = string
 }
 
 variable "slack_security_team_channel" {
+  default     = null
   description = "The Slack channel ID for the security team"
   type        = string
 }
 
 variable "slack_customer_success_team_channel" {
+  default     = null
   description = "The Slack channel ID for the customer success team"
   type        = string
 }
 
 variable "slack_workspace_id" {
+  default     = null
   description = "The Slack workspace ID"
   type        = string
+}
+
+########################################
+# Jira Integration
+########################################
+variable "account_jira_integration_profile" {
+  default     = "NOC"
+  description = "The Jira integration profile"
+  type        = string
+}
+
+variable "cost_jira_integration_profile" {
+  default     = "NOC"
+  description = "The Jira integration profile"
+  type        = string
+}
+
+variable "compliance_jira_integration_profile" {
+  default     = "NOC"
+  description = "The Jira integration profile"
+  type        = string
+}
+
+variable "security_jira_integration_profile" {
+  default     = "NOC"
+  description = "The Jira integration profile"
+  type        = string
+}
+
+variable "jira_organization_id" {
+  type        = string
+  description = "Organization ID for Jira integration"
 }
 
 ########################################

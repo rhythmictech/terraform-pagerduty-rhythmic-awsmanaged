@@ -29,6 +29,8 @@ resource "pagerduty_service_dependency" "cost" {
 }
 
 resource "pagerduty_slack_connection" "cost" {
+  count = var.slack_customer_success_team_channel != null ? 1 : 0
+
   channel_id        = var.slack_customer_success_team_channel
   notification_type = "responder"
   source_id         = pagerduty_service.cost.id
@@ -60,9 +62,112 @@ resource "pagerduty_service_integration" "cost" {
   vendor  = data.pagerduty_vendor.datadog.id
 }
 
-resource "pagerduty_extension" "cost" {
-  name              = "jira-${pagerduty_service.cost.id}"
-  config            = templatefile("${path.module}/jira.json.tpl", { organization_id = var.jira_organization_id })
-  extension_objects = [pagerduty_service.cost.id]
-  extension_schema  = data.pagerduty_extension_schema.jira.id
+resource "pagerduty_jira_cloud_account_mapping_rule" "cost" {
+  name            = "jira-${pagerduty_service.cost.id}"
+  account_mapping = data.pagerduty_jira_cloud_account_mapping.cost.id
+
+  config {
+    service = pagerduty_service.cost.id
+    jira {
+      create_issue_on_incident_trigger = data.aws_ssm_parameter.jira_cost_create_issue_on_incident_trigger.value
+      sync_notes_user                  = data.pagerduty_user.cost_user.id
+
+      custom_fields {
+        source_incident_field   = "incident_description"
+        target_issue_field      = "description"
+        target_issue_field_name = "Description"
+        type                    = "attribute"
+      }
+
+      custom_fields {
+        source_incident_field   = "incident_title"
+        target_issue_field      = "summary"
+        target_issue_field_name = "Summary"
+        type                    = "attribute"
+      }
+
+      custom_fields {
+        target_issue_field      = "customfield_10002"
+        target_issue_field_name = "Organization"
+        type                    = "const"
+        value                   = var.jira_organization_id
+      }
+
+      dynamic "custom_fields" {
+        for_each = jsondecode(nonsensitive(data.aws_ssm_parameter.jira_cost_custom_jira_fields.value))
+
+        content {
+          target_issue_field      = custom_fields.value.target_issue_field
+          target_issue_field_name = custom_fields.value.target_issue_field_name
+          type                    = "jira_value"
+          value                   = custom_fields.value.value
+        }
+      }
+
+      dynamic "custom_fields" {
+        for_each = jsondecode(nonsensitive(data.aws_ssm_parameter.jira_cost_custom_fixed_fields.value))
+
+        content {
+          target_issue_field      = custom_fields.value.target_issue_field
+          target_issue_field_name = custom_fields.value.target_issue_field_name
+          type                    = "const"
+          value                   = custom_fields.value.value
+        }
+      }
+
+      issue_type {
+        id   = data.aws_ssm_parameter.jira_cost_issue_type_id.value
+        name = data.aws_ssm_parameter.jira_cost_issue_type_name.value
+      }
+
+      priorities {
+        jira_id      = "10000"
+        pagerduty_id = data.pagerduty_priority.p1.id
+      }
+
+      priorities {
+        jira_id      = "2"
+        pagerduty_id = data.pagerduty_priority.p2.id
+      }
+
+      priorities {
+        jira_id      = "3"
+        pagerduty_id = data.pagerduty_priority.p3.id
+      }
+
+
+      priorities {
+        jira_id      = "4"
+        pagerduty_id = data.pagerduty_priority.p4.id
+      }
+
+      priorities {
+        jira_id      = "4"
+        pagerduty_id = data.pagerduty_priority.p5.id
+      }
+
+      project {
+        id   = data.aws_ssm_parameter.jira_cost_project_id.value
+        key  = data.aws_ssm_parameter.jira_cost_project_key.value
+        name = data.aws_ssm_parameter.jira_cost_project_name.value
+      }
+
+      status_mapping {
+
+        acknowledged {
+          id   = "3"
+          name = "In Progress"
+        }
+        resolved {
+          id   = "5"
+          name = "Resolved"
+        }
+        triggered {
+          id   = "1"
+          name = "Open"
+        }
+      }
+
+    }
+  }
 }
