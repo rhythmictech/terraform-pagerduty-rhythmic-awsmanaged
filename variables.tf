@@ -38,27 +38,33 @@ variable "slack_workspace_id" {
 ########################################
 # Jira Integration
 ########################################
-variable "jira_project_key" {
+variable "account_jira_integration_profile" {
   default     = "NOC"
-  description = "The Jira project key"
+  description = "The Jira integration profile"
   type        = string
 }
 
-variable "jira_project_name" {
+variable "cost_jira_integration_profile" {
   default     = "NOC"
-  description = "The Jira project name"
+  description = "The Jira integration profile"
+  type        = string
+}
+
+variable "compliance_jira_integration_profile" {
+  default     = "NOC"
+  description = "The Jira integration profile"
+  type        = string
+}
+
+variable "security_jira_integration_profile" {
+  default     = "NOC"
+  description = "The Jira integration profile"
   type        = string
 }
 
 variable "jira_organization_id" {
   type        = string
   description = "Organization ID for Jira integration"
-}
-
-variable "jira_create_issue_on_incident_trigger" {
-  default     = false
-  type        = bool
-  description = "Whether to create a Jira issue when an incident is triggered"
 }
 
 ########################################
