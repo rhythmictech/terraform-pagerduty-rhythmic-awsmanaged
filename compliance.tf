@@ -94,7 +94,7 @@ resource "pagerduty_jira_cloud_account_mapping_rule" "compliance" {
       }
 
       dynamic "custom_fields" {
-        for_each = try(jsondecode(nonsensitive(data.aws_ssm_parameter.jira_compliance_custom_jira_fields.value)), [])
+        for_each = coalesce(jsondecode(nonsensitive(data.aws_ssm_parameter.jira_compliance_custom_jira_fields.value)), [])
 
         content {
           target_issue_field      = custom_fields.value.target_issue_field
@@ -105,7 +105,7 @@ resource "pagerduty_jira_cloud_account_mapping_rule" "compliance" {
       }
 
       dynamic "custom_fields" {
-        for_each = try(jsondecode(nonsensitive(data.aws_ssm_parameter.jira_compliance_custom_fixed_fields.value)), [])
+        for_each = coalesce(jsondecode(nonsensitive(data.aws_ssm_parameter.jira_compliance_custom_fixed_fields.value)), [])
 
         content {
           target_issue_field      = custom_fields.value.target_issue_field
