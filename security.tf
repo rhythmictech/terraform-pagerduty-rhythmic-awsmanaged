@@ -182,19 +182,18 @@ resource "pagerduty_jira_cloud_account_mapping_rule" "security" {
       status_mapping {
 
         acknowledged {
-          id   = "3"
-          name = "In Progress"
+          id   = "2"
+          name = "Under investigation"
         }
         resolved {
-          id   = "5"
-          name = "Resolved"
+          id   = "7"
+          name = "Completed"
         }
         triggered {
           id   = "1"
           name = "Open"
         }
       }
-
     }
   }
 }
