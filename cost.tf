@@ -116,8 +116,8 @@ resource "pagerduty_jira_cloud_account_mapping_rule" "cost" {
       }
 
       issue_type {
-        id   = data.aws_ssm_parameter.jira_cost_issue_type_id.value
-        name = data.aws_ssm_parameter.jira_cost_issue_type_name.value
+        id   = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_issue_type.value)[0])
+        name = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_issue_type.value)[1])
       }
 
       priorities {
@@ -147,24 +147,24 @@ resource "pagerduty_jira_cloud_account_mapping_rule" "cost" {
       }
 
       project {
-        id   = data.aws_ssm_parameter.jira_cost_project_id.value
-        key  = data.aws_ssm_parameter.jira_cost_project_key.value
+        id   = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_project.value)[0])
+        key  = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_project.value)[1])
         name = data.aws_ssm_parameter.jira_cost_project_name.value
       }
 
       status_mapping {
 
         acknowledged {
-          id   = "2"
-          name = "Under investigation"
+          id   = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_issue_status_acknowledged.value)[0])
+          name = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_issue_status_acknowledged.value)[1])
         }
         resolved {
-          id   = "7"
-          name = "Completed"
+          id   = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_issue_status_resolved.value)[0])
+          name = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_issue_status_resolved.value)[1])
         }
         triggered {
-          id   = "1"
-          name = "Open"
+          id   = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_issue_status_open.value)[0])
+          name = nonsensitive(split(":", data.aws_ssm_parameter.jira_cost_issue_status_open.value)[1])
         }
       }
 

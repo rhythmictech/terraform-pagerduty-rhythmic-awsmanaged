@@ -6,24 +6,28 @@ data "aws_ssm_parameter" "jira_account_mapping_name" {
   name = "/config/jira/${var.account_jira_integration_profile}/account_mapping_name"
 }
 
-data "aws_ssm_parameter" "jira_account_project_id" {
-  name = "/config/jira/${var.account_jira_integration_profile}/project_id"
-}
-
-data "aws_ssm_parameter" "jira_account_project_key" {
-  name = "/config/jira/${var.account_jira_integration_profile}/project_key"
+data "aws_ssm_parameter" "jira_account_project" {
+  name = "/config/jira/${var.account_jira_integration_profile}/project"
 }
 
 data "aws_ssm_parameter" "jira_account_project_name" {
   name = "/config/jira/${var.account_jira_integration_profile}/project_name"
 }
 
-data "aws_ssm_parameter" "jira_account_issue_type_id" {
-  name = "/config/jira/${var.account_jira_integration_profile}/issue_type_id"
+data "aws_ssm_parameter" "jira_account_issue_type" {
+  name = "/config/jira/${var.account_jira_integration_profile}/issue_type"
 }
 
-data "aws_ssm_parameter" "jira_account_issue_type_name" {
-  name = "/config/jira/${var.account_jira_integration_profile}/issue_type_name"
+data "aws_ssm_parameter" "jira_account_issue_status_open" {
+  name = "/config/jira/${var.account_jira_integration_profile}/issue_status_open"
+}
+
+data "aws_ssm_parameter" "jira_account_issue_status_acknowledged" {
+  name = "/config/jira/${var.account_jira_integration_profile}/issue_status_acknowledged"
+}
+
+data "aws_ssm_parameter" "jira_account_issue_status_resolved" {
+  name = "/config/jira/${var.account_jira_integration_profile}/issue_status_resolved"
 }
 
 data "aws_ssm_parameter" "jira_account_sync_notes_user" {
@@ -50,24 +54,28 @@ data "aws_ssm_parameter" "jira_compliance_mapping_name" {
   name = "/config/jira/${var.compliance_jira_integration_profile}/account_mapping_name"
 }
 
-data "aws_ssm_parameter" "jira_compliance_project_id" {
-  name = "/config/jira/${var.compliance_jira_integration_profile}/project_id"
-}
-
-data "aws_ssm_parameter" "jira_compliance_project_key" {
-  name = "/config/jira/${var.compliance_jira_integration_profile}/project_key"
+data "aws_ssm_parameter" "jira_compliance_project" {
+  name = "/config/jira/${var.compliance_jira_integration_profile}/project"
 }
 
 data "aws_ssm_parameter" "jira_compliance_project_name" {
   name = "/config/jira/${var.compliance_jira_integration_profile}/project_name"
 }
 
-data "aws_ssm_parameter" "jira_compliance_issue_type_id" {
-  name = "/config/jira/${var.compliance_jira_integration_profile}/issue_type_id"
+data "aws_ssm_parameter" "jira_compliance_issue_type" {
+  name = "/config/jira/${var.compliance_jira_integration_profile}/issue_type"
 }
 
-data "aws_ssm_parameter" "jira_compliance_issue_type_name" {
-  name = "/config/jira/${var.compliance_jira_integration_profile}/issue_type_name"
+data "aws_ssm_parameter" "jira_compliance_issue_status_open" {
+  name = "/config/jira/${var.compliance_jira_integration_profile}/issue_status_open"
+}
+
+data "aws_ssm_parameter" "jira_compliance_issue_status_acknowledged" {
+  name = "/config/jira/${var.compliance_jira_integration_profile}/issue_status_acknowledged"
+}
+
+data "aws_ssm_parameter" "jira_compliance_issue_status_resolved" {
+  name = "/config/jira/${var.compliance_jira_integration_profile}/issue_status_resolved"
 }
 
 data "aws_ssm_parameter" "jira_compliance_sync_notes_user" {
@@ -88,30 +96,34 @@ data "aws_ssm_parameter" "jira_compliance_custom_fixed_fields" {
 
 ########################################
 # Jira parameters - Cost
-########################################    
+########################################
 
 data "aws_ssm_parameter" "jira_cost_mapping_name" {
   name = "/config/jira/${var.cost_jira_integration_profile}/account_mapping_name"
 }
 
-data "aws_ssm_parameter" "jira_cost_project_id" {
-  name = "/config/jira/${var.cost_jira_integration_profile}/project_id"
-}
-
-data "aws_ssm_parameter" "jira_cost_project_key" {
-  name = "/config/jira/${var.cost_jira_integration_profile}/project_key"
+data "aws_ssm_parameter" "jira_cost_project" {
+  name = "/config/jira/${var.cost_jira_integration_profile}/project"
 }
 
 data "aws_ssm_parameter" "jira_cost_project_name" {
   name = "/config/jira/${var.cost_jira_integration_profile}/project_name"
 }
 
-data "aws_ssm_parameter" "jira_cost_issue_type_id" {
-  name = "/config/jira/${var.cost_jira_integration_profile}/issue_type_id"
+data "aws_ssm_parameter" "jira_cost_issue_type" {
+  name = "/config/jira/${var.cost_jira_integration_profile}/issue_type"
 }
 
-data "aws_ssm_parameter" "jira_cost_issue_type_name" {
-  name = "/config/jira/${var.cost_jira_integration_profile}/issue_type_name"
+data "aws_ssm_parameter" "jira_cost_issue_status_open" {
+  name = "/config/jira/${var.cost_jira_integration_profile}/issue_status_open"
+}
+
+data "aws_ssm_parameter" "jira_cost_issue_status_acknowledged" {
+  name = "/config/jira/${var.cost_jira_integration_profile}/issue_status_acknowledged"
+}
+
+data "aws_ssm_parameter" "jira_cost_issue_status_resolved" {
+  name = "/config/jira/${var.cost_jira_integration_profile}/issue_status_resolved"
 }
 
 data "aws_ssm_parameter" "jira_cost_sync_notes_user" {
@@ -138,24 +150,28 @@ data "aws_ssm_parameter" "jira_security_mapping_name" {
   name = "/config/jira/${var.security_jira_integration_profile}/account_mapping_name"
 }
 
-data "aws_ssm_parameter" "jira_security_project_id" {
-  name = "/config/jira/${var.security_jira_integration_profile}/project_id"
-}
-
-data "aws_ssm_parameter" "jira_security_project_key" {
-  name = "/config/jira/${var.security_jira_integration_profile}/project_key"
+data "aws_ssm_parameter" "jira_security_project" {
+  name = "/config/jira/${var.security_jira_integration_profile}/project"
 }
 
 data "aws_ssm_parameter" "jira_security_project_name" {
   name = "/config/jira/${var.security_jira_integration_profile}/project_name"
 }
 
-data "aws_ssm_parameter" "jira_security_issue_type_id" {
-  name = "/config/jira/${var.security_jira_integration_profile}/issue_type_id"
+data "aws_ssm_parameter" "jira_security_issue_type" {
+  name = "/config/jira/${var.security_jira_integration_profile}/issue_type"
 }
 
-data "aws_ssm_parameter" "jira_security_issue_type_name" {
-  name = "/config/jira/${var.security_jira_integration_profile}/issue_type_name"
+data "aws_ssm_parameter" "jira_security_issue_status_open" {
+  name = "/config/jira/${var.security_jira_integration_profile}/issue_status_open"
+}
+
+data "aws_ssm_parameter" "jira_security_issue_status_acknowledged" {
+  name = "/config/jira/${var.security_jira_integration_profile}/issue_status_acknowledged"
+}
+
+data "aws_ssm_parameter" "jira_security_issue_status_resolved" {
+  name = "/config/jira/${var.security_jira_integration_profile}/issue_status_resolved"
 }
 
 data "aws_ssm_parameter" "jira_security_sync_notes_user" {
