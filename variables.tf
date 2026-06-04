@@ -2,7 +2,13 @@
 # General Variables
 ########################################
 variable "awsorg_name" {
-  description = "AWS Organization Name (can be nickname or formal name)"
+  description = "Organization or tenancy name (AWS Org name, OCI tenancy name, etc. — can be nickname or formal name)"
+  type        = string
+}
+
+variable "cloud_name" {
+  default     = "AWS"
+  description = "Cloud provider name used in PagerDuty service and business-service display names (e.g., AWS, OCI, GCP, Azure)"
   type        = string
 }
 

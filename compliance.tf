@@ -3,7 +3,7 @@ data "pagerduty_escalation_policy" "compliance" {
 }
 
 resource "pagerduty_service" "compliance" {
-  name                    = "${var.awsorg_name} Compliance Notifications (AWS - ${var.customer_name})"
+  name                    = "${var.awsorg_name} Compliance Notifications (${var.cloud_name} - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = "null"
