@@ -3,7 +3,7 @@ data "pagerduty_escalation_policy" "security" {
 }
 
 resource "pagerduty_service" "security" {
-  name                    = "${var.awsorg_name} Security Notifications (AWS - ${var.customer_name})"
+  name                    = "${var.awsorg_name} Security Notifications (${var.cloud_name} - ${var.customer_name})"
   acknowledgement_timeout = 43200
   alert_creation          = "create_alerts_and_incidents"
   auto_resolve_timeout    = "null"

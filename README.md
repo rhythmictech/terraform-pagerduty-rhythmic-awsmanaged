@@ -6,13 +6,39 @@
 [![pre-commit-check](https://github.com/rhythmictech/terraform-pagerduty-rhythmic-awsmanaged/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/rhythmictech/terraform-pagerduty-rhythmic-awsmanaged/actions/workflows/pre-commit.yaml)
 <a href="https://twitter.com/intent/follow?screen_name=RhythmicTech"><img src="https://img.shields.io/twitter/follow/RhythmicTech?style=social&logo=twitter" alt="follow on Twitter"></a>
 
-Configures PagerDuty for a customer with AWS Managed Services.
+Configures PagerDuty for a customer with Rhythmic Managed Services. Supports AWS (default), OCI, and other clouds via the `cloud_name` variable, which is interpolated into PagerDuty service and business-service display names.
 
 Suppression rules allow for PagerDuty Event Orchestration to automatically silence specified patterns, including optionally for a specified time range.
 
 ## Requirements
 * PagerDuty provider
 * PagerDuty API key
+* AWS provider (used to read shared Jira/PagerDuty config from SSM Parameter Store in Rhythmic's AWS account — required regardless of the customer's cloud)
+
+## Non-AWS usage
+
+For non-AWS customers (e.g., OCI), set `cloud_name` and override the AWS-specific default suppression rules:
+
+```hcl
+module "managed_services" {
+  source  = "rhythmictech/rhythmic-awsmanaged/pagerduty"
+  version = "~> 0.9"
+
+  awsorg_name   = var.oci_tenancy_name
+  customer_name = var.customer_name
+  cloud_name    = "OCI"
+
+  # The default account_default_suppression_rules are AWS-specific
+  # (ACM cert renewal, CloudShell, AWS VPN). Override for non-AWS clouds:
+  account_default_suppression_rules = []
+
+  jira_organization_id                = "62"
+  account_jira_integration_profile    = "cs-account"
+  compliance_jira_integration_profile = "cs-compliance"
+  cost_jira_integration_profile       = "cs-cost"
+  security_jira_integration_profile   = "noc"
+}
+```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
