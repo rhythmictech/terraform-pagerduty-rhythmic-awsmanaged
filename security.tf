@@ -89,6 +89,15 @@ resource "pagerduty_service_integration" "security" {
   vendor  = data.pagerduty_vendor.datadog.id
 }
 
+# Native AWS integration on the security service for GuardDuty findings
+# delivered via EventBridge -> SNS (HTTPS). The integration URL is exposed
+# as the security_guardduty_integration_url output for the SNS subscription.
+resource "pagerduty_service_integration" "security_guardduty" {
+  name    = data.pagerduty_vendor.guardduty.name
+  service = pagerduty_service.security.id
+  vendor  = data.pagerduty_vendor.guardduty.id
+}
+
 resource "pagerduty_jira_cloud_account_mapping_rule" "security" {
   name            = "jira-${pagerduty_service.security.id}"
   account_mapping = data.pagerduty_jira_cloud_account_mapping.security.id
