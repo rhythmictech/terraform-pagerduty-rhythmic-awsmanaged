@@ -80,6 +80,11 @@ output "security_service_name" {
   value       = pagerduty_service.security.name
 }
 
+output "security_guardduty_integration_url" {
+  description = "PagerDuty Events API URL for the security service GuardDuty integration. Subscribe an SNS topic (HTTPS, raw message delivery off) carrying GuardDuty findings to this URL."
+  value       = "https://events.pagerduty.com/integration/${pagerduty_service_integration.security_guardduty.integration_key}/enqueue"
+}
+
 output "datadog_integrations" {
   description = "All PagerDuty Datadog integrations"
   # TODO probably a less hardcody syntax for this that globs what we need but whatever
