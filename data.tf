@@ -198,6 +198,10 @@ data "pagerduty_vendor" "datadog" {
   name = "Datadog"
 }
 
+data "pagerduty_vendor" "guardduty" {
+  name = "Amazon GuardDuty"
+}
+
 data "pagerduty_extension_schema" "jira" {
   name = "Jira Cloud"
 }
